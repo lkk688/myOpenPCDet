@@ -17,6 +17,8 @@ from pcdet.utils import common_utils
 from train_utils.optimization import build_optimizer, build_scheduler
 from train_utils.train_utils import train_model
 
+#test spconv
+import spconv
 
 def parse_config():
     parser = argparse.ArgumentParser(description='arg parser')
