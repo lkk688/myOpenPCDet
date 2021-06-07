@@ -22,7 +22,7 @@ import spconv
 
 def parse_config():
     parser = argparse.ArgumentParser(description='arg parser')
-    parser.add_argument('--cfg_file', type=str, default='./tools/cfgs/kitti_models/pointpillar.yaml', help='specify the config for training')
+    parser.add_argument('--cfg_file', type=str, default='./tools/cfgs/kitti_models/waymopointpillar.yaml', help='specify the config for training')
 
     parser.add_argument('--batch_size', type=int, default=4, required=False, help='batch size for training')
     parser.add_argument('--epochs', type=int, default=20, required=False, help='number of epochs to train for')
@@ -50,7 +50,7 @@ def parse_config():
     cfg_from_yaml_file(args.cfg_file, cfg)
     cfg.TAG = Path(args.cfg_file).stem
     #cfg.EXP_GROUP_PATH = '/'.join(args.cfg_file.split('/')[1:-1])  # remove 'cfgs' and 'xxxx.yaml'
-    cfg.EXP_GROUP_PATH = 'myexp'
+    cfg.EXP_GROUP_PATH = 'waymo'
 
     if args.set_cfgs is not None:
         cfg_from_list(args.set_cfgs, cfg)
