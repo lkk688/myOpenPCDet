@@ -107,6 +107,7 @@ class KittiDataset(DatasetTemplate):
 
     def get_calib(self, idx):
         calib_file = self.root_split_path / 'calib' / ('%s.txt' % idx)
+        #print("calib_file:", calib_file)
         assert calib_file.exists()
         return calibration_kitti.Calibration(calib_file)
 
@@ -375,7 +376,9 @@ class KittiDataset(DatasetTemplate):
 
         info = copy.deepcopy(self.kitti_infos[index])
 
-        sample_idx = info['point_cloud']['lidar_idx']
+        #sample_idx = info['point_cloud']['lidar_idx']
+        sample_idx_int = info['image']['image_idx']
+        sample_idx = '{:06d}'.format(sample_idx_int)
         img_shape = info['image']['image_shape']
         calib = self.get_calib(sample_idx)
         get_item_list = self.dataset_cfg.get('GET_ITEM_LIST', ['points'])
