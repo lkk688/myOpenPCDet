@@ -1,5 +1,5 @@
 DATASET: 'WaymoKittiDataset'
-DATA_PATH: '/home/kaikai/P100DATA5T/WaymoKitti/4c_train5678'
+DATA_PATH: '/home/lkk/HPC249Data/WaymoKittitMulti/4c_train5678'
 
 POINT_CLOUD_RANGE: [0, -40, -3, 70.4, 40, 1]
 
