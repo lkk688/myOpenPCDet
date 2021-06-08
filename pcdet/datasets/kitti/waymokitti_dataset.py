@@ -107,7 +107,7 @@ class WaymoKittiDataset(DatasetTemplate):
 
     def get_calib(self, idx):
         calib_file = self.root_split_path / 'calib' / ('%s.txt' % idx)
-        print("calib_file:", calib_file)
+        #print("calib_file:", calib_file)
         assert calib_file.exists()
         return calibration_waymokitti.Calibration(calib_file)
 
