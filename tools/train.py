@@ -27,7 +27,7 @@ def parse_config():
     parser.add_argument('--batch_size', type=int, default=4, required=False, help='batch size for training')
     parser.add_argument('--epochs', type=int, default=50, required=False, help='number of epochs to train for')
     parser.add_argument('--workers', type=int, default=8, help='number of workers for dataloader')
-    parser.add_argument('--extra_tag', type=str, default='default', help='extra tag for this experiment')
+    parser.add_argument('--extra_tag', type=str, default='train2', help='extra tag for this experiment')#'default'
     parser.add_argument('--ckpt', type=str, default=None, help='checkpoint to start from')
     parser.add_argument('--pretrained_model', type=str, default='./output/waymo/waymopointpillar/default/ckpt/checkpoint_epoch_50.pth', help='pretrained_model')#./modelzoo/pointpillar_7728.pth
     parser.add_argument('--launcher', choices=['none', 'pytorch', 'slurm'], default='none')
@@ -50,7 +50,7 @@ def parse_config():
     cfg_from_yaml_file(args.cfg_file, cfg)
     cfg.TAG = Path(args.cfg_file).stem
     #cfg.EXP_GROUP_PATH = '/'.join(args.cfg_file.split('/')[1:-1])  # remove 'cfgs' and 'xxxx.yaml'
-    cfg.EXP_GROUP_PATH = 'waymo2'
+    cfg.EXP_GROUP_PATH = 'waymo'
 
     if args.set_cfgs is not None:
         cfg_from_list(args.set_cfgs, cfg)
