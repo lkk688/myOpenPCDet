@@ -24,7 +24,7 @@ def parse_config():
     parser.add_argument('--batch_size', type=int, default=4, required=False, help='batch size for training')
     parser.add_argument('--workers', type=int, default=4, help='number of workers for dataloader')
     parser.add_argument('--extra_tag', type=str, default='default', help='extra tag for this experiment')
-    parser.add_argument('--ckpt', type=str, default='./output/waymo/waymopointpillar/default/ckpt/checkpoint_epoch_50.pth', help='checkpoint to start from')
+    parser.add_argument('--ckpt', type=str, default='./output/waymo2/waymopointpillar/default/ckpt/checkpoint_epoch_50.pth', help='checkpoint to start from')
     parser.add_argument('--launcher', choices=['none', 'pytorch', 'slurm'], default='none')
     parser.add_argument('--tcp_port', type=int, default=18888, help='tcp port for distrbuted training')
     parser.add_argument('--local_rank', type=int, default=0, help='local rank for distributed training')
@@ -42,7 +42,7 @@ def parse_config():
 
     cfg_from_yaml_file(args.cfg_file, cfg)
     cfg.TAG = Path(args.cfg_file).stem
-    cfg.EXP_GROUP_PATH ='waymo' #'/'.join(args.cfg_file.split('/')[1:-1])  # remove 'cfgs' and 'xxxx.yaml'
+    cfg.EXP_GROUP_PATH ='waymo2' #'/'.join(args.cfg_file.split('/')[1:-1])  # remove 'cfgs' and 'xxxx.yaml'
 
     np.random.seed(1024)
 
@@ -149,7 +149,6 @@ def main():
         args.batch_size = args.batch_size // total_gpus
 
     output_dir = cfg.ROOT_DIR / 'output' / cfg.EXP_GROUP_PATH / cfg.TAG / args.extra_tag
-    print(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     eval_output_dir = output_dir / 'eval'
@@ -180,7 +179,6 @@ def main():
     log_config_to_file(cfg, logger=logger)
 
     ckpt_dir = args.ckpt_dir if args.ckpt_dir is not None else output_dir / 'ckpt'
-    print(ckpt_dir)
 
     test_set, test_loader, sampler = build_dataloader(
         dataset_cfg=cfg.DATA_CONFIG,
