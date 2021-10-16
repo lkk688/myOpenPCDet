@@ -142,7 +142,7 @@ class DatasetTemplate(torch_data.Dataset):
                 data_dict['gt_boxes2d'] = data_dict['gt_boxes2d'][selected]
 
         if data_dict.get('points', None) is not None:
-            data_dict = self.point_feature_encoder.forward(data_dict)
+            data_dict = self.point_feature_encoder.forward(data_dict) #"points":(113898, 4), "frame_id", "use_lead_xyz": True
 
         data_dict = self.data_processor.forward(
             data_dict=data_dict
@@ -159,22 +159,22 @@ class DatasetTemplate(torch_data.Dataset):
     @staticmethod
     def collate_batch(batch_list, _unused=False):
         data_dict = defaultdict(list)
-        for cur_sample in batch_list:
+        for cur_sample in batch_list: #combine the data_dict from multiple batches into one data_dict (each element is array)
             for key, val in cur_sample.items():
                 data_dict[key].append(val)
-        batch_size = len(batch_list)
+        batch_size = len(batch_list) #1
         ret = {}
 
-        for key, val in data_dict.items():
+        for key, val in data_dict.items():#'points', points array (one batch with multiple items)
             try:
                 if key in ['voxels', 'voxel_num_points']:
-                    ret[key] = np.concatenate(val, axis=0)
+                    ret[key] = np.concatenate(val, axis=0)#array, each element (14290, 32, 4) combine together
                 elif key in ['points', 'voxel_coords']:
                     coors = []
-                    for i, coor in enumerate(val):
-                        coor_pad = np.pad(coor, ((0, 0), (1, 0)), mode='constant', constant_values=i)
+                    for i, coor in enumerate(val):#coor:(61340, 4)
+                        coor_pad = np.pad(coor, ((0, 0), (1, 0)), mode='constant', constant_values=i)#"points": (61340, 4), pad 0 col in left, become (61340, 5); "voxel_coords": (14290, 3) pad 0 col in left to (14290, 4)
                         coors.append(coor_pad)
-                    ret[key] = np.concatenate(coors, axis=0)
+                    ret[key] = np.concatenate(coors, axis=0)#concat multiple items in one batch
                 elif key in ['gt_boxes']:
                     max_gt = max([len(x) for x in val])
                     batch_gt_boxes3d = np.zeros((batch_size, max_gt, val[0].shape[-1]), dtype=np.float32)

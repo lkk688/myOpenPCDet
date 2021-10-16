@@ -29,7 +29,7 @@ class PointFeatureEncoder(object):
         data_dict['points'], use_lead_xyz = getattr(self, self.point_encoding_config.encoding_type)(
             data_dict['points']
         )
-        data_dict['use_lead_xyz'] = use_lead_xyz
+        data_dict['use_lead_xyz'] = use_lead_xyz #true
         return data_dict
 
     def absolute_coordinates_encoding(self, points=None):
@@ -37,11 +37,11 @@ class PointFeatureEncoder(object):
             num_output_features = len(self.used_feature_list)
             return num_output_features
 
-        point_feature_list = [points[:, 0:3]]
-        for x in self.used_feature_list:
+        point_feature_list = [points[:, 0:3]] #[(113898, 3)]
+        for x in self.used_feature_list: #['x', 'y', 'z', 'intensity'] 
             if x in ['x', 'y', 'z']:
                 continue
-            idx = self.src_feature_list.index(x)
-            point_feature_list.append(points[:, idx:idx+1])
-        point_features = np.concatenate(point_feature_list, axis=1)
+            idx = self.src_feature_list.index(x) #3
+            point_feature_list.append(points[:, idx:idx+1]) #two elements, one is [(113898, 3)] (xyz), another is (113898, 1)
+        point_features = np.concatenate(point_feature_list, axis=1) #(113898, 4)
         return point_features, True

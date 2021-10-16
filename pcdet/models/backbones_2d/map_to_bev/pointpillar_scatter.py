@@ -16,11 +16,11 @@ class PointPillarScatter(nn.Module):
         batch_spatial_features = []
         batch_size = coords[:, 0].max().int().item() + 1
         for batch_idx in range(batch_size):
-            spatial_feature = torch.zeros(
+            spatial_feature = torch.zeros( 
                 self.num_bev_features,
                 self.nz * self.nx * self.ny,
                 dtype=pillar_features.dtype,
-                device=pillar_features.device)
+                device=pillar_features.device) #[64, 214272]
 
             batch_mask = coords[:, 0] == batch_idx
             this_coords = coords[batch_mask, :]

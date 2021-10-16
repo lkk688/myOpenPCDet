@@ -22,8 +22,8 @@ class DataProcessor(object):
             return partial(self.mask_points_and_boxes_outside_range, config=config)
 
         if data_dict.get('points', None) is not None:
-            mask = common_utils.mask_points_by_range(data_dict['points'], self.point_cloud_range)
-            data_dict['points'] = data_dict['points'][mask]
+            mask = common_utils.mask_points_by_range(data_dict['points'], self.point_cloud_range)#(113898,) true/false
+            data_dict['points'] = data_dict['points'][mask] #(113898, 4)->(61340, 4)
 
         if data_dict.get('gt_boxes', None) is not None and config.REMOVE_OUTSIDE_BOXES and self.training:
             mask = box_utils.mask_boxes_outside_range_numpy(
@@ -62,8 +62,8 @@ class DataProcessor(object):
             self.voxel_size = config.VOXEL_SIZE
             return partial(self.transform_points_to_voxels, voxel_generator=voxel_generator)
 
-        points = data_dict['points']
-        voxel_output = voxel_generator.generate(points)
+        points = data_dict['points'] #(61340, 4)
+        voxel_output = voxel_generator.generate(points) #"voxel": (14290, 32, 4), "coordinates": (14290, 3), "num_points_per_voxel": (14290,), "voxel_point_mask": (14290, 32, 1), voxel_num':14290
         if isinstance(voxel_output, dict):
             voxels, coordinates, num_points = \
                 voxel_output['voxels'], voxel_output['coordinates'], voxel_output['num_points_per_voxel']

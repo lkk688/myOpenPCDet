@@ -9,8 +9,8 @@ from pcdet.config import cfg, cfg_from_yaml_file
 from pcdet.datasets import DatasetTemplate
 from pcdet.models import build_network, load_data_to_gpu
 from pcdet.utils import common_utils
-import mayavi.mlab as mlab
-from visual_utils import visualize_utils as V
+# import mayavi.mlab as mlab
+# from visual_utils import visualize_utils as V
 
 
 class DemoDataset(DatasetTemplate):
@@ -45,11 +45,11 @@ class DemoDataset(DatasetTemplate):
             raise NotImplementedError
 
         input_dict = {
-            'points': points,
+            'points': points, #(113898, 4)
             'frame_id': index,
         }
 
-        data_dict = self.prepare_data(data_dict=input_dict)
+        data_dict = self.prepare_data(data_dict=input_dict)#"points": (61340, 4), 'frame_id':0, 'use_lead_xyz': True, 'voxels': (14290, 32, 4), 'voxel_coords':(14290, 3), 'voxel_num_points': (14290,)
         return data_dict
 
 
@@ -90,11 +90,11 @@ def main():
             load_data_to_gpu(data_dict)
             pred_dicts, _ = model.forward(data_dict)
 
-            V.draw_scenes(
-                points=data_dict['points'][:, 1:], ref_boxes=pred_dicts[0]['pred_boxes'],
-                ref_scores=pred_dicts[0]['pred_scores'], ref_labels=pred_dicts[0]['pred_labels']
-            )
-            mlab.show(stop=True)
+            # V.draw_scenes(
+            #     points=data_dict['points'][:, 1:], ref_boxes=pred_dicts[0]['pred_boxes'],
+            #     ref_scores=pred_dicts[0]['pred_scores'], ref_labels=pred_dicts[0]['pred_labels']
+            # )
+            # mlab.show(stop=True)
 
     logger.info('Demo done.')
 

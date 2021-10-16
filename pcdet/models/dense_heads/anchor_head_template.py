@@ -240,23 +240,23 @@ class AnchorHeadTemplate(nn.Module):
                 anchors = torch.cat([anchor.permute(3, 4, 0, 1, 2, 5).contiguous().view(-1, anchor.shape[-1])
                                      for anchor in self.anchors], dim=0)
             else:
-                anchors = torch.cat(self.anchors, dim=-3)
+                anchors = torch.cat(self.anchors, dim=-3) #[1, 248, 216, 3, 2, 7]
         else:
             anchors = self.anchors
-        num_anchors = anchors.view(-1, anchors.shape[-1]).shape[0]
-        batch_anchors = anchors.view(1, -1, anchors.shape[-1]).repeat(batch_size, 1, 1)
+        num_anchors = anchors.view(-1, anchors.shape[-1]).shape[0] #321408
+        batch_anchors = anchors.view(1, -1, anchors.shape[-1]).repeat(batch_size, 1, 1) #[1, 321408, 7]
         batch_cls_preds = cls_preds.view(batch_size, num_anchors, -1).float() \
-            if not isinstance(cls_preds, list) else cls_preds
+            if not isinstance(cls_preds, list) else cls_preds #[1, 321408, 3]
         batch_box_preds = box_preds.view(batch_size, num_anchors, -1) if not isinstance(box_preds, list) \
-            else torch.cat(box_preds, dim=1).view(batch_size, num_anchors, -1)
-        batch_box_preds = self.box_coder.decode_torch(batch_box_preds, batch_anchors)
+            else torch.cat(box_preds, dim=1).view(batch_size, num_anchors, -1) #[1, 321408, 7]
+        batch_box_preds = self.box_coder.decode_torch(batch_box_preds, batch_anchors) #[1, 321408, 7]
 
         if dir_cls_preds is not None:
             dir_offset = self.model_cfg.DIR_OFFSET
             dir_limit_offset = self.model_cfg.DIR_LIMIT_OFFSET
             dir_cls_preds = dir_cls_preds.view(batch_size, num_anchors, -1) if not isinstance(dir_cls_preds, list) \
-                else torch.cat(dir_cls_preds, dim=1).view(batch_size, num_anchors, -1)
-            dir_labels = torch.max(dir_cls_preds, dim=-1)[1]
+                else torch.cat(dir_cls_preds, dim=1).view(batch_size, num_anchors, -1) #[1, 321408, 2]
+            dir_labels = torch.max(dir_cls_preds, dim=-1)[1] #[1, 321408]
 
             period = (2 * np.pi / self.model_cfg.NUM_DIR_BINS)
             dir_rot = common_utils.limit_period(
@@ -269,7 +269,7 @@ class AnchorHeadTemplate(nn.Module):
                 -(batch_box_preds[..., 6] + np.pi / 2), offset=0.5, period=np.pi * 2
             )
 
-        return batch_cls_preds, batch_box_preds
+        return batch_cls_preds, batch_box_preds #[1, 321408, 3] [1, 321408, 7]
 
     def forward(self, **kwargs):
         raise NotImplementedError
