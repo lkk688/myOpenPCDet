@@ -24,14 +24,14 @@ class PointPillarScatter(nn.Module):
 
             batch_mask = coords[:, 0] == batch_idx
             this_coords = coords[batch_mask, :]
-            indices = this_coords[:, 1] + this_coords[:, 2] * self.nx + this_coords[:, 3]
+            indices = this_coords[:, 1] + this_coords[:, 2] * self.nx + this_coords[:, 3] #coord zyx format
             indices = indices.type(torch.long)
             pillars = pillar_features[batch_mask, :]
-            pillars = pillars.t()
+            pillars = pillars.t() #[14290, 64]->[64, 14290]
             spatial_feature[:, indices] = pillars
             batch_spatial_features.append(spatial_feature)
 
         batch_spatial_features = torch.stack(batch_spatial_features, 0)
-        batch_spatial_features = batch_spatial_features.view(batch_size, self.num_bev_features * self.nz, self.ny, self.nx)
+        batch_spatial_features = batch_spatial_features.view(batch_size, self.num_bev_features * self.nz, self.ny, self.nx) #[64, 214272]-> [1, 64, 496, 432]
         batch_dict['spatial_features'] = batch_spatial_features
         return batch_dict

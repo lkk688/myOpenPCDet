@@ -18,8 +18,8 @@ class BaseBEVBackbone(nn.Module):
 
         if self.model_cfg.get('UPSAMPLE_STRIDES', None) is not None:
             assert len(self.model_cfg.UPSAMPLE_STRIDES) == len(self.model_cfg.NUM_UPSAMPLE_FILTERS)
-            num_upsample_filters = self.model_cfg.NUM_UPSAMPLE_FILTERS
-            upsample_strides = self.model_cfg.UPSAMPLE_STRIDES
+            num_upsample_filters = self.model_cfg.NUM_UPSAMPLE_FILTERS #[128, 128, 128]
+            upsample_strides = self.model_cfg.UPSAMPLE_STRIDES #[1, 2, 4]
         else:
             upsample_strides = num_upsample_filters = []
 

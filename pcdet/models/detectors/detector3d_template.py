@@ -212,7 +212,7 @@ class Detector3DTemplate(nn.Module):
                 assert cls_preds.shape[1] in [1, self.num_class]
 
                 if not batch_dict['cls_preds_normalized']:
-                    cls_preds = torch.sigmoid(cls_preds)
+                    cls_preds = torch.sigmoid(cls_preds) #[321408, 3]
             else:
                 cls_preds = [x[batch_mask] for x in batch_dict['batch_cls_preds']]
                 src_cls_preds = cls_preds
@@ -256,7 +256,7 @@ class Detector3DTemplate(nn.Module):
                     box_scores=cls_preds, box_preds=box_preds,
                     nms_config=post_process_cfg.NMS_CONFIG,
                     score_thresh=post_process_cfg.SCORE_THRESH
-                )#input 321408, output 35
+                )#input 321408, 386? output 35
 
                 if post_process_cfg.OUTPUT_RAW_SCORE:
                     max_cls_preds, _ = torch.max(src_cls_preds, dim=-1)
