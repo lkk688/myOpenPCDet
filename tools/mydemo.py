@@ -9,8 +9,8 @@ from pcdet.config import cfg, cfg_from_yaml_file
 from pcdet.datasets import DatasetTemplate
 from pcdet.models import build_network, load_data_to_gpu
 from pcdet.utils import common_utils
-# import mayavi.mlab as mlab
-# from visual_utils import visualize_utils as V
+import mayavi.mlab as mlab
+from visual_utils import visualize_utils as V
 
 
 class DemoDataset(DatasetTemplate):
@@ -90,11 +90,20 @@ def main():
             load_data_to_gpu(data_dict)
             pred_dicts, _ = model.forward(data_dict)
 
-            # V.draw_scenes(
-            #     points=data_dict['points'][:, 1:], ref_boxes=pred_dicts[0]['pred_boxes'],
-            #     ref_scores=pred_dicts[0]['pred_scores'], ref_labels=pred_dicts[0]['pred_labels']
-            # )
-            # mlab.show(stop=True)
+            points=data_dict['points'][:, 1:]
+            print("points shape:", points.shape)#x,4
+            ref_boxes=pred_dicts[0]['pred_boxes']
+            print("ref_boxes:", ref_boxes)#[x,7]
+            ref_scores=pred_dicts[0]['pred_scores']
+            print("ref_scores:", ref_scores)#x,1
+            ref_labels=pred_dicts[0]['pred_labels']
+            print("ref_labels:", ref_labels)#x,1
+
+            V.draw_scenes(
+                points=data_dict['points'][:, 1:], ref_boxes=pred_dicts[0]['pred_boxes'],
+                ref_scores=pred_dicts[0]['pred_scores'], ref_labels=pred_dicts[0]['pred_labels']
+            )
+            mlab.show(stop=True)
 
     logger.info('Demo done.')
 
